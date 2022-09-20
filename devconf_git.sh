@@ -5,10 +5,11 @@
 #
 # DIR_DEV     home of sourcefiles, scripts, linkjobs, packages
 # for gcad3d: ${HOME}/devel/gcad3d/....
-export DIR_DEV=${HOME}/devel/
+export DIR_DEV=${PWD}/../
 #
 # DIR_BIN     home of objects, executables, libraries
-export DIR_BIN=${HOME}/devel/bin/
+export DIR_BIN=${PWD}/../bin/
+
 # for gcad3d: ${HOME}/devel/bin/gcad3d/
 #
 # EOF
