@@ -132,7 +132,7 @@ DO NOT USE - does not work with OS_sys1
   va_list va;
   char    s1[1024], s2[1200], *p;
 
-  // printf("## DEB_prt_print |%s|\n",format);
+  // fprintf(stderr, "## DEB_prt_print |%s|\n",format);
 
   va_start(va, format);
 
@@ -150,7 +150,7 @@ DO NOT USE - does not work with OS_sys1
 #endif
 
       // TESTBLOCK
-      // printf("## - DEB_prt_print |%s|\n",s2);
+      // fprintf(stderr, "## - DEB_prt_print |%s|\n",s2);
       // END TESTBLOCK
 
 
@@ -179,7 +179,7 @@ DO NOT USE - does not work with OS_sys1
   char  s1[256];
 
 
-  printf("## DEB_prt_init %d\n",mode);
+  fprintf(stderr, "## DEB_prt_init %d\n",mode);
 
 
     // TESTBLOCK
@@ -220,7 +220,7 @@ DO NOT USE - does not work with OS_sys1
       debDir = getenv("TMP");
       strcpy(s1, debDir);
       strcat(s1, "\\debug.dat");
-        // printf(" DEB_prt_init-1-1 |%s|\n",s1);
+        // fprintf(stderr, " DEB_prt_init-1-1 |%s|\n",s1);
       remove (s1);
 #else
       system("rm -rf /tmp/debug.dat");
@@ -232,7 +232,7 @@ DO NOT USE - does not work with OS_sys1
 */
 
   // for OS_sys1 (popen) start debug-text with "##"
-  printf("## ex-DEB_prt_init %d\n",DEB_prt_stat);
+  fprintf(stderr, "## ex-DEB_prt_init %d\n",DEB_prt_stat);
 
 
 }

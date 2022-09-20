@@ -557,9 +557,9 @@ char      AP_ED_oNam[128];   ///< objectName of active Line
   // set s1 = command (exefilnam parameters)
   // parameters: save outDir symDirFilnam filter title
 #ifdef _MSC_VER
-  sprintf(sCmd,"CMD /C \"\"%s\" %s \"%s\"", sEnam, sPar, fnTmp);
+  sprintf(sCmd,"CMD /C \"\"%s\" %s > \"%s\"", sEnam, sPar, fnTmp);
 #else
-  sprintf(sCmd,"%s %s %s", sEnam, sPar, fnTmp);
+  sprintf(sCmd,"%s %s > %s", sEnam, sPar, fnTmp);
 #endif
     printf(" AP_GUI__ do |%s|\n",sCmd);
 
