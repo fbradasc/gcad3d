@@ -10660,7 +10660,7 @@ glCallList (DL_shade_wire);
   p2     = &tx1->p2;
 
 
-  // printf("GL_set_BMP |%s| scl=%f GL_SclNorm=%f\n",symNam,scl,GL_SclNorm);
+  printf("GL_set_BMP |%s| scl=%f GL_SclNorm=%f\n",symNam,scl,GL_SclNorm);
 
 
   // provide BitmapFile for <symNam> as file <bNam> in <tmpDir>
@@ -10677,7 +10677,7 @@ glCallList (DL_shade_wire);
 
   // Bitmapdaten --> mSpc
   pixSiz = bmp_load (&mSpc, &ix, &iy, bNam);
-    // printf(" bmp_load-pixSiz=%d ix=%d iy=%d\n",pixSiz,ix,iy);
+  printf(" bmp_load-pixSiz=%d ix=%d iy=%d\n",pixSiz,ix,iy);
   // if(pixSiz < 0) return -1;
 
 
@@ -10707,7 +10707,6 @@ glCallList (DL_shade_wire);
   tx1->xSiz = ix;
   tx1->ySiz = iy;
 
-
   //================================================================
 //   dlInd = GL_fix_DL_ind (dli);
 //   // printf(" dli=%d\n",dlInd);
@@ -10721,7 +10720,9 @@ glCallList (DL_shade_wire);
   // glPixelStorei (GL_PACK_SKIP_ROWS, 0);
   // glPixelStorei (GL_PACK_SKIP_PIXELS, 0);
 
+#if defined(USE_GL_DRAW_PIXEL)
   glRasterPos3d (p1->x, p1->y, p1->z);
+#endif
 
   glPushMatrix ();
 
@@ -10738,6 +10739,7 @@ glCallList (DL_shade_wire);
   }
 
 
+#if defined(USE_GL_DRAW_PIXEL)
   // PROBLEM: if origin of image gets out of window, image disappears
   // move to midpoint of image
   // MIDPOINT SHOULD BE THE USER-DEFINED-POINT.
@@ -10765,7 +10767,53 @@ glCallList (DL_shade_wire);
                  mSpc);             // data
   }
 
+#else
+    printf("GL_set_BMP f_scl=%f\n",f_scl);
 
+    {
+        GLint texInd;
+
+        glGenTextures(1, &texInd);
+
+        glBindTexture(GL_TEXTURE_2D, texInd);
+
+        glEnable(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP);
+
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGB,
+                     ix, iy,
+                     0,
+                     (pixSiz == 3) ? GL_BGR : GL_LUMINANCE,
+                     GL_UNSIGNED_BYTE,
+                     mSpc);
+
+        glBegin(GL_QUADS);
+        {
+            ix *= 2.0 /* * f_scl */;
+            iy *= 2.0 /* * f_scl */;
+
+            GLdouble x=p1->x;
+            GLdouble y=p1->y;
+            GLdouble z=p1->z;
+
+            glTexCoord2d(0.0, 0.0); glVertex3d(x   , y   , z);
+            glTexCoord2d(0.0, 1.0); glVertex3d(x   , y+iy, z);
+            glTexCoord2d(1.0, 1.0); glVertex3d(x+ix, y+iy, z);
+            glTexCoord2d(1.0, 0.0); glVertex3d(x+ix, y   , z);
+        }
+        glEnd();
+
+        glDisable(GL_TEXTURE_2D);
+    }
+#endif
 
 
   //----------------------------------------------------------------
@@ -10783,11 +10831,9 @@ glCallList (DL_shade_wire);
   //----------------------------------------------------------------
   L_99:
   // glEnable (GL_LIGHTING);
-
   glDepthFunc (GL_LEQUAL); // reset ...
 
   glPopMatrix ();  // vom ScaleBack
-
 
   free (mSpc);
 
@@ -13097,9 +13143,9 @@ glCallList (DL_shade_wire);
 
 
 
-  // printf("GL_set_txt__ txt=|%s| dMod=%d bMod=%d ang=%f scl=%f chw=%f\n",
-         // txt, dMod, bMod, txAng, scale, GR_tx_chw);
-  // printf("  ay=%f az=%f pos=%f,%f,%f\n",ay, az, ptx->x, ptx->y, ptx->z);
+  printf("GL_set_txt__ txt=|%s| dMod=%d bMod=%d ang=%f scl=%f chw=%f\n",
+         txt, dMod, bMod, txAng, scale, GR_tx_chw);
+  printf("  ay=%f az=%f pos=%f,%f,%f\n",ay, az, ptx->x, ptx->y, ptx->z);
 
 
   if(txt == NULL) {TX_Print("***** GL_set_txt__ E001"); return;}
